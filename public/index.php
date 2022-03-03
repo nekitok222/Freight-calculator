@@ -48,11 +48,9 @@ require "./public/script.php";
 		<div class="button">
 			<input type="submit" value="Рассчитать" class="btn">
 			<div class="textarea">Ответ:<br>
-				<?php echo $_POST['type'] . ', ' . $_POST['cargo'] . ', ' . $_POST['month'] . ' = ' . $answer;
-					if ($answer) {
-						echo ' тонн';
-					}; 
-				?>
+				<?php if ($answer) {
+					echo $_POST['type'] . ', ' . $_POST['cargo'] . ', ' . $_POST['month'] . ' = ' . $answer . ' тонн';
+				}; ?>
 			</div>
 		</div>
 	</form>
