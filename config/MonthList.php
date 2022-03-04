@@ -1,5 +1,5 @@
 <?php
-$monthList =[
+return [
 	'jan'=>'Январь',
 	'feb'=>'Февраль',
 	'aug'=>'Август',

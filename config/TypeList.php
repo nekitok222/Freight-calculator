@@ -1,5 +1,5 @@
 <?php
-$typeList =[
+return [
     'shrot'=>'Шрот',
     'zhmyh'=>'Жмых',
     'soya'=>'Соя'

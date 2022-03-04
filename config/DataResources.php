@@ -1,7 +1,7 @@
 <?php
 
 
-$resourcesData = [
+return [
     "shrot" => [
         25 => [
             "jan" => "125",

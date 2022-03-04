@@ -1,11 +1,13 @@
 <?php
-require "../config/DataResources.php";
-require "../config/MonthList.php";
-require "../config/TypeList.php";
+$resourcesData = require "../config/DataResources.php";
+$monthList = require "../config/MonthList.php";
+$typeList = require "../config/TypeList.php";
 
 $type = $_POST['type'];
 $weight = $_POST['cargo'];
 $month = $_POST['month'];
+
+
 
 if ($type && $weight && $month) {
     $answer = $resourcesData[$type][$weight][$month];
@@ -20,7 +22,7 @@ if ($type && $weight && $month) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Калькулятор рассчета стоимости грузоперевозок</title>
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
