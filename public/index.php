@@ -1,17 +1,23 @@
 <?php
-$resourcesData = require "../config/DataResources.php";
-$monthList = require "../config/MonthList.php";
-$typeList = require "../config/TypeList.php";
+require_once "../config/link.php";
+require "../config/DataResources.php";
+require "../config/MonthList.php";
+require "../config/TypeList.php";
 
 $type = $_POST['type'];
 $weight = $_POST['cargo'];
 $month = $_POST['month'];
 
-
-
 if ($type && $weight && $month) {
-    $answer = $resourcesData[$type][$weight][$month];
+	$query = "SELECT price FROM price WHERE type_id = $type AND tonnages_id = $weight AND month_id = $month";
+    $result_query_price = mysqli_query($link,$query);
+	$answer = mysqli_fetch_array($result_query_price, MYSQLI_ASSOC); 
 }
+
+$price = "SELECT price, tonnages_id, month_id FROM price WHERE type_id = $type";
+$result_query_prices = mysqli_query($link,$price);
+$for_table = mysqli_fetch_all($result_query_prices, MYSQLI_ASSOC); 
+
 ?>
 
 <!DOCTYPE html>
@@ -32,24 +38,36 @@ if ($type && $weight && $month) {
 			<div class="month">
 				<p>Выберите месяц доставки:</p>
 				<select name="month">
-					<?php foreach ($monthList as $key => $value) : ?>
-						<?php echo "<option value='$key'>$value</option>" ?>
+					<?php foreach ($result_query_month as $value) : ?>
+						<?php
+							if ($_POST['month'] == $value['id']) {
+								$sql_month = $value['rus_month'];
+							}
+							echo "<option value='".$value['id']."'>".$value['rus_month']."</option>" ?>
 					<?php endforeach ?>
 				</select>
 			</div>
 			<div class="material-type">
 				<p>Выберите тип сырья:</p>
 				<select name="type">
-					<?php foreach ($typeList as $key => $value) : ?>
-						<?php echo "<option value='$key'>$value</option>" ?>
+					<?php foreach ($result_query_type as $value) : ?>
+						<?php 
+							if ($_POST['type'] == $value['id']) {
+								$sql_type = $value['rus_type_name'];
+							}
+							echo "<option value='".$value['id']."'>".$value['rus_type_name']."</option>" ?>
 					<?php endforeach ?>
 				</select>
 			</div>
 			<div class="cargo">
 				<p>Выберите тоннаж товара:</p>
 				<select name="cargo">
-					<?php foreach (array_keys($resourcesData['shrot']) as $value) : ?>
-						<?= "<option value='$value'>$value тонн</option>" ?>
+					<?php foreach ($result_query_tonnages as $value) : ?>
+						<?php
+							if ($_POST['cargo'] == $value['id']) {
+								$sql_tonnages = $value['tonnages'];
+							}
+							echo "<option value='".$value['id']."'>".$value['tonnages'].' тонн' . "</option>" ?>
 					<?php endforeach ?>
 				</select>
 			</div>
@@ -58,27 +76,29 @@ if ($type && $weight && $month) {
 			<input type="submit" value="Рассчитать" class="btn">
 			<div class="textarea">Ответ:<br>
 				<?php if ($answer) {
-					echo $_POST['type'] . ', ' . $_POST['cargo'] . ', ' . $_POST['month'] . ' = ' . $answer . ' тонн';
-				}; ?>
+					echo $sql_month . ', ' . $sql_type . ', '. $sql_tonnages . ' тонн = ' . $answer['price'];
+				}
+				?>
 			</div>
 		</div>
 	</form>
-
 	<?php if ($type) : ?>
-		<h2>Таблица расчета <?= $typeList[$type] ?></h2>
+		<h2>Таблица расчета <?= $sql_type ?></h2>
 		<table>
 			<tr>
 				<th>вес\дата</th>
-				<?php foreach ($monthList as $value) : ?>
-					<th><?= $value ?></th>
+				<?php foreach ($result_query_month as $value) : ?>
+					<th><?= $value['rus_month'] ?></th>
 				<?php endforeach; ?>
 			</tr>
-			<?php foreach ($resourcesData[$type] as $key => $value) : ?>
+			<?php foreach($result_query_tonnages as $value): ?>
 				<tr>
-					<td><?= $key ?> Тонн</td>
-					<?php foreach ($value as $key2 => $price) : ?>
-						<td <?php if ($key == $weight && $price == $answer && $key2 == $month) : ?> class='aim' <?php endif; ?>><?= $price ?></td>
-					<?php endforeach; ?>
+					<td><?= $value['tonnages']?></td>
+					<?php foreach($for_table as $key): ?>
+						<?php if ($value['id'] == $key['tonnages_id']): ?>
+							<td <?php if ($key['month_id'] == $_POST['month'] && $key['tonnages_id'] == $_POST['cargo']): ?> class="aim" <?php endif; ?>> <?= $key['price']; ?> </td>
+						<?php endif; ?>
+					<?php endforeach; ?> 
 				</tr>
 			<?php endforeach; ?>
 		</table>
