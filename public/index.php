@@ -1,5 +1,13 @@
 <?php
-require_once "../config/link.php";
+$db = require_once "../config/db.php";
+
+$link = mysqli_connect($db['host'], $db['username'], $db['password'], $db['database_name']);
+mysqli_set_charset($link,'utf8');
+if (mysqli_connect_errno()) {
+    echo 'error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error();
+    exit();
+}
+
 require "../config/DataResources.php";
 require "../config/MonthList.php";
 require "../config/TypeList.php";
