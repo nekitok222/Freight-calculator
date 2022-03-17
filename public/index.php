@@ -1,5 +1,7 @@
 <?php
-$db = require_once "../config/db.php";
+
+require_once "../config/autorization.php";
+$db = require_once "../config/default/db.php";
 
 $link = mysqli_connect($db['host'], $db['username'], $db['password'], $db['database_name']);
 mysqli_set_charset($link,'utf8');
