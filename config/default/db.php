@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'host' => HOST,
-    'username' => USERNAME,
-    'password' => PASSWORD, 
-    'database_name' => DATABASE_NAME
+    'host' => $host,
+    'username' => $username,
+    'password' => $password, 
+    'database_name' => $data_basename
     ];

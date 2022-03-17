@@ -1,6 +1,6 @@
 <?php
 
-define("HOST", "localhost");
-define("USERNAME", "admin");
-define("PASSWORD", "1234");
-define("DATABASE_NAME", "dataresources");
+$host = 'localhost';
+$username = 'admin';
+$password = '1234';
+$data_basename = 'dataresources';
