@@ -1,7 +1,16 @@
 <?php
 
-require_once "../config/autorization.php";
-$db = require_once "../config/_db.php";
+
+require "../autoload.php";
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
+
+
+
+$db = require "../config/_db.php";
 
 $link = mysqli_connect($db['host'], $db['username'], $db['password'], $db['database_name']);
 mysqli_set_charset($link,'utf8');
@@ -9,6 +18,8 @@ if (mysqli_connect_errno()) {
     echo 'error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error();
     exit();
 }
+
+
 
 require "../config/DataResources.php";
 require "../config/MonthList.php";
@@ -27,6 +38,8 @@ if ($type && $weight && $month) {
 $price = "SELECT price, tonnages_id, month_id FROM price WHERE type_id = $type";
 $result_query_prices = mysqli_query($link,$price);
 $for_table = mysqli_fetch_all($result_query_prices, MYSQLI_ASSOC); 
+
+new Classee;
 
 ?>
 
@@ -96,14 +109,15 @@ $for_table = mysqli_fetch_all($result_query_prices, MYSQLI_ASSOC);
 		<h2>Таблица расчета <?= $sql_type ?></h2>
 		<table>
 			<tr>
-				<th>вес\дата</th>
+				<th>Дата</th>
 				<?php foreach ($result_query_month as $value) : ?>
-					<th><?= $value['rus_month'] ?></th>
+					<th rowspan="2"><?= $value['rus_month'] ?></th>
 				<?php endforeach; ?>
 			</tr>
+			<th style="border: 2px solid; border-left: 0;">Вес</th>
 			<?php foreach($result_query_tonnages as $value): ?>
 				<tr>
-					<td><?= $value['tonnages']?></td>
+					<td style = "border-collapse: collapse"><?= $value['tonnages']?></td>
 					<?php foreach($for_table as $key): ?>
 						<?php if ($value['id'] == $key['tonnages_id']): ?>
 							<td <?php if ($key['month_id'] == $_POST['month'] && $key['tonnages_id'] == $_POST['cargo']): ?> class="aim" <?php endif; ?>> <?= $key['price']; ?> </td>
