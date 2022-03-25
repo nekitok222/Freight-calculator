@@ -1,13 +1,10 @@
 <?php
 
+// ini_set('error_reporting', E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
 
-require "../autoload.php";
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
-
+require "../vendor/autoload.php";
 
 
 $db = require "../config/_db.php";
@@ -19,15 +16,26 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-
-
 require "../config/DataResources.php";
 require "../config/MonthList.php";
 require "../config/TypeList.php";
 
+use Laminas\Diactoros\Request;
+
 $type = $_POST['type'];
-$weight = $_POST['cargo'];
 $month = $_POST['month'];
+$weight = $_POST['cargo'];
+
+$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
+);
+
+// $type = $request->getPost();
+// echo '<pre>'; print_r($type); echo '</pre>';
 
 if ($type && $weight && $month) {
 	$query = "SELECT price FROM price WHERE type_id = $type AND tonnages_id = $weight AND month_id = $month";
@@ -38,8 +46,6 @@ if ($type && $weight && $month) {
 $price = "SELECT price, tonnages_id, month_id FROM price WHERE type_id = $type";
 $result_query_prices = mysqli_query($link,$price);
 $for_table = mysqli_fetch_all($result_query_prices, MYSQLI_ASSOC); 
-
-new Classee;
 
 ?>
 
